@@ -30,13 +30,13 @@
                 />
             <TextView android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{viewModel.name}"/>
+                android:text="@{viewModel.name.value}"/>
             <TextView android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{viewModel.location}"/>
+                android:text="@{viewModel.location.value}"/>
             <TextView android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{viewModel.bio}"/>
+                android:text="@{viewModel.bio.value}"/>
         </LinearLayout>
     </RelativeLayout>
 </layout>

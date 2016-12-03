@@ -14,6 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class GitHubModel {
     final PublishSubject<User> _user = PublishSubject.create();
+
     public final Observable<User> user = _user;
 
     public void getUser(String user) {
