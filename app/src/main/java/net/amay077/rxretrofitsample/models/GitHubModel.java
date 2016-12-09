@@ -13,11 +13,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class GitHubModel {
+    // 外部公開値を変更するための Subject
     final PublishSubject<User> _user = PublishSubject.create();
 
+    // 外部に公開する Hot な Observable
     public final Observable<User> user = _user;
 
+    // 指定した UserID の GitHub ユーザー情報を得る
+    // Model だから戻り値の無いメソッドだよ ref - http://ugaya40.hateblo.jp/entry/model-mistake
     public void getUser(String user) {
+        // 毎度 build するのはいかがなものか
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.github.com/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -25,6 +30,7 @@ public class GitHubModel {
 
         GitHubService service = retrofit.create(GitHubService.class);
 
+        // Retrofit でレスポンスを取得したら Subject を通じて外部に値を流す
         final Call<User> result = service.getUser(user);
         result.enqueue(new Callback<User>() {
             @Override
@@ -34,7 +40,8 @@ public class GitHubModel {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                _user.onError(t); // 適当過ぎると思われ
+                User empty = new User();
+                _user.onNext(empty); // エラー処理適当過ぎると思われ
             }
         });
     }
