@@ -1,9 +1,10 @@
-package net.amay077.rxretrofitsample;
+package net.amay077.rxretrofitsample.views;
 
 import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import net.amay077.rxretrofitsample.R;
 import net.amay077.rxretrofitsample.databinding.ActivityMainBinding;
 import net.amay077.rxretrofitsample.viewmodels.MainViewModel;
 

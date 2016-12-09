@@ -1,35 +1,40 @@
 package net.amay077.rxretrofitsample.viewmodels;
 
-import android.databinding.ObservableField;
-import android.view.View;
+import android.text.TextUtils;
 
 import net.amay077.rxretrofitsample.models.GitHubModel;
-import net.amay077.rxretrofitsample.models.User;
 
-import java.util.Observable;
-
+import jp.keita.kagurazaka.rxproperty.RxCommand;
 import jp.keita.kagurazaka.rxproperty.RxProperty;
-import rx.functions.Action1;
-import rx.functions.Func1;
 
 public class MainViewModel {
-    public final ObservableField<String> userId = new ObservableField<>();
+    // View(EditText) と TwoWay Binding する RxProperty
+    public final RxProperty<String> userId = new RxProperty<>();
+    // ボタンをおした時に実行されるコマンド(＝ボタンを押した時に onNext が呼ばれる Observable)
+    public final RxCommand<Void> getUserCommand;
 
+    // Model -> View DataBinding 用の RxProperty（name.value で DataBinding できる）
+    // OneWay Binding だから ReadOnlyRxProperty の方が望ましい
     public final RxProperty<String> name;
     public final RxProperty<String> location;
     public final RxProperty<String> bio;
 
-    final GitHubModel _gitHubModel = new GitHubModel(); // DIしようね
+    // GitHub からユーザー情報を得る Model. DIしようね
+    final GitHubModel _gitHubModel = new GitHubModel();
 
     public MainViewModel() {
-        userId.set("amay077");
+        // Model -> ViewModel -> View のデータの流れ道を作っておきましょう
+        // GitHubModel の user が変更されたら、name/location/bio にそれぞれデータを流すよ
+        name = new RxProperty<>(_gitHubModel.user.map(user -> user.getName()));
+        location = new RxProperty<>(_gitHubModel.user.map(user -> user.getLocation()));
+        bio = new RxProperty<>(_gitHubModel.user.map(user -> user.getBio()));
 
-        name = new RxProperty<String>(_gitHubModel.user.map(user -> user.getName()));
-        location = new RxProperty<String>(_gitHubModel.user.map(user -> user.getLocation()));
-        bio = new RxProperty<String>(_gitHubModel.user.map(user -> user.getBio()));
-    }
 
-    public void onClickGetUser(View view) {
-        _gitHubModel.getUser(userId.get());
+        // ユーザー取得コマンドは userID が空でない時のみ使用可能です
+        getUserCommand = new RxCommand<>(userId.asObservable().map(x -> !TextUtils.isEmpty(x)));
+        // ユーザー取得が実行されたら GitHubModel の getUser を呼ぶよ
+        getUserCommand.asObservable().subscribe(x -> {
+            _gitHubModel.getUser(userId.get());
+        });
     }
 }
