@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/RxRetrofitSample.iml" filepath="$PROJECT_DIR$/RxRetrofitSample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RxPropertyRetrofitSample.iml" filepath="$PROJECT_DIR$/RxPropertyRetrofitSample.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
